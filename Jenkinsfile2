@@ -1,0 +1,40 @@
+pipeline {
+    agent any
+    stages {
+      stage('clone') {
+        steps {
+          git 'https://github.com/openliberty/guide-getting-started'
+            }
+        }
+      stage('accesproject') {
+        steps {
+            bat 'cd guide-getting-started'
+            }
+        }
+      stage('accessapp') {
+        steps {
+            bat 'cd start'
+            }
+        }
+      stage('clean') {
+        steps {
+            bat 'mvn clean'
+            }
+        }
+      stage('build') {
+        steps {
+            bat 'mvn package'
+            }
+        }
+      stage('dockerbuild') {
+        steps {
+            bat 'docker build -t openliberty-maven:1.0 .'
+            }
+        }
+      stage('dockerrun') {
+        steps {
+            bat 'docker run -p 9181:9181 openliberty-maven:1.0'
+            }
+        }
+    }
+}
